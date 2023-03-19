@@ -6,19 +6,21 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
+
 public class GameStateChangeEvent extends Event {
 
     private final GameState gameState;
     private final Game game;
 
-    public GameStateChangeEvent(final GameState gameState, final Game game) {
+    public GameStateChangeEvent(@Nonnull final GameState gameState, @Nonnull final Game game) {
         this.gameState = gameState;
         this.game = game;
     }
 
     @Override
     public @NotNull HandlerList getHandlers() {
-        return null;
+        return new HandlerList();
     }
 
     public GameState getGameState() {

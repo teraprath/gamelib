@@ -31,7 +31,7 @@ public class CountdownTask {
     public void start() {
         game.info(String.format("New Task started: %s, %s, %d seconds", startState, endState, countdown));
         game.info(String.format("UUID: %s", uuid));
-        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, task -> {
+        plugin.getServer().getScheduler().runTaskTimer(plugin, task -> {
             while (game.getGameState().equals(startState) && !cancelled) {
                 game.info(String.format("Task (%s) : %d seconds", uuid, countdown));
                 if (countdown == 0) {

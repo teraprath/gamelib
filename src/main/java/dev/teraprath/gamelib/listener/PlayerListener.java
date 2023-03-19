@@ -24,7 +24,7 @@ public class PlayerListener implements Listener {
     private final JavaPlugin plugin;
     private final Game game;
 
-    public PlayerListener(JavaPlugin plugin, Game game) {
+    public PlayerListener(@Nonnull JavaPlugin plugin, @Nonnull Game game) {
         this.plugin = plugin;
         this.game = game;
     }

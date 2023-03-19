@@ -42,9 +42,7 @@ public class Game {
     public void setGameState(GameState gameState) {
         info("GameState update: " + this.gameState + " -> " + gameState);
         this.gameState = gameState;
-        plugin.getServer().getScheduler().runTask(plugin, task -> {
-            plugin.getServer().getPluginManager().callEvent(new GameStateChangeEvent(this.gameState, this));
-        });
+        plugin.getServer().getPluginManager().callEvent(new GameStateChangeEvent(this.gameState, this));
     }
 
     public void info(String message) {
