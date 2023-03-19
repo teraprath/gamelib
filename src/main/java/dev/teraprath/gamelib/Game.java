@@ -20,16 +20,15 @@ public class Game {
         this.maxPlayers = maxPlayers;
     }
 
-    public Game init(@Nonnull JavaPlugin plugin) {
+    public void init(@Nonnull JavaPlugin plugin) {
         this.plugin = plugin;
         this.gameState = GameState.LOBBY;
         registerEvents();
-        return this;
     }
 
     private void registerEvents() {
         final PluginManager pm = plugin.getServer().getPluginManager();
-        pm.registerEvents(new PlayerListener(this), plugin);
+        pm.registerEvents(new PlayerListener(plugin, this), plugin);
     }
 
     public GameState getGameState() {

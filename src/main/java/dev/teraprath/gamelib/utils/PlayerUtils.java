@@ -16,7 +16,16 @@ public class PlayerUtils {
         player.setGameMode(GameMode.SURVIVAL);
         player.setExp(0);
         player.setTotalExperience(0);
+        player.setLevel(0);
         player.setHealth(20);
         player.setFoodLevel(20);
     }
+
+    public void toSpectator() {
+        reset();
+        player.setGameMode(GameMode.SPECTATOR);
+        player.setAllowFlight(true);
+        player.setFlying(true);
+    }
+
 }
