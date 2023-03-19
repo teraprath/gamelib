@@ -96,14 +96,11 @@ public class PlayerListener implements Listener {
     }
 
     private void protectEvent(@Nonnull Cancellable event, boolean bypass, Player player) {
-        assert !(isRunning());
-        if (bypass && player.getGameMode() != GameMode.CREATIVE) {
-            event.setCancelled(true);
+        if (game.getGameState() != GameState.GAME) {
+            if (bypass && player.getGameMode() != GameMode.CREATIVE) {
+                event.setCancelled(true);
+            }
         }
-    }
-
-    private boolean isRunning() {
-        return game.getGameState().equals(GameState.GAME);
     }
 
 }
