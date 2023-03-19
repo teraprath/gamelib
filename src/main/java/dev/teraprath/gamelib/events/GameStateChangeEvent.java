@@ -6,30 +6,20 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class GameStateChangeEvent extends Event implements Cancellable {
+import javax.annotation.Nonnull;
+
+public class GameStateChangeEvent extends Event {
 
     private final GameState gameState;
     private final Game game;
-    private boolean cancelled;
 
     public GameStateChangeEvent(final GameState gameState, final Game game) {
         this.gameState = gameState;
         this.game = game;
-        this.cancelled = false;
     }
 
     @Override
-    public boolean isCancelled() {
-        return this.cancelled;
-    }
-
-    @Override
-    public void setCancelled(boolean cancel) {
-        this.cancelled = cancel;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
+    public @Nonnull HandlerList getHandlers() {
         return null;
     }
 

@@ -1,8 +1,6 @@
 package dev.teraprath.gamelib.task;
 
 import dev.teraprath.gamelib.Game;
-import dev.teraprath.gamelib.events.GameStateChangeEvent;
-import dev.teraprath.gamelib.events.TaskCountEvent;
 import dev.teraprath.gamelib.state.GameState;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -37,9 +35,7 @@ public class CountdownTask {
             while (game.getGameState().equals(startState) && !cancelled) {
                 game.info(String.format("Task (%s) : %d seconds", uuid, countdown));
                 if (countdown == 0) {
-                    plugin.getServer().getScheduler().runTask(plugin, sync -> {
-                        game.setGameState(endState);
-                    });
+                    game.setGameState(endState);
                 }
                 countdown--;
             }
