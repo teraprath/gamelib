@@ -2,11 +2,9 @@ package dev.teraprath.gamelib.events;
 
 import dev.teraprath.gamelib.Game;
 import dev.teraprath.gamelib.state.GameState;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class GameStateChangeEvent extends Event {
 
@@ -19,7 +17,7 @@ public class GameStateChangeEvent extends Event {
     }
 
     @Override
-    public @Nonnull HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return null;
     }
 

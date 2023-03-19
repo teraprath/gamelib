@@ -39,7 +39,7 @@ public class CountdownTask {
                 }
                 countdown--;
             }
-        }, 20, 20);
+        }, 20L, 20L);
     }
 
     public void setCancelled(boolean cancelled) {
