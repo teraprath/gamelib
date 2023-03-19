@@ -41,9 +41,6 @@ public class CountdownTask {
                         game.setGameState(endState);
                     });
                 }
-                plugin.getServer().getScheduler().runTask(plugin, sync -> {
-                    plugin.getServer().getPluginManager().callEvent(new TaskCountEvent(this, game));
-                });
                 countdown--;
             }
         }, 20, 20);
