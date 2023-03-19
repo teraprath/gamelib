@@ -1,5 +1,6 @@
 package dev.teraprath.gamelib;
 
+import dev.teraprath.gamelib.events.GameStateChangeEvent;
 import dev.teraprath.gamelib.listener.PlayerListener;
 import dev.teraprath.gamelib.state.GameState;
 import org.bukkit.plugin.PluginManager;
@@ -41,6 +42,7 @@ public class Game {
     public void setGameState(GameState gameState) {
         info("GameState update: " + this.gameState + " -> " + gameState);
         this.gameState = gameState;
+        plugin.getServer().getPluginManager().callEvent(new GameStateChangeEvent(this.gameState, this));
     }
 
     public void info(String message) {
