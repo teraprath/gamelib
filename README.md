@@ -1,4 +1,4 @@
-[![](https://jitpack.io/v/teraprath/corelib.svg)](https://jitpack.io/#teraprath/corelib)
+[![](https://jitpack.io/v/teraprath/gamelib.svg)](https://jitpack.io/#teraprath/gamelib)
 
 ****
 
@@ -16,7 +16,7 @@ Maven
 
 <dependency>
     <groupId>com.github.teraprath</groupId>
-    <artifactId>corelib</artifactId>
+    <artifactId>gamelib</artifactId>
     <version>VERSION</version>
 </dependency>
 ````
@@ -32,6 +32,6 @@ repositories {
 ````
 ````
 dependencies {
-    implementation 'com.github.teraprath:corelib:VERSION'
+    implementation 'com.github.teraprath:gamelib:VERSION'
 }
 ````
