@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>dev.teraprath</groupId>
-    <artifactId>corelib</artifactId>
-    <version>1.6.7-SNAPSHOT</version>
+    <artifactId>gamelib</artifactId>
+    <version>1.0.5-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -33,6 +33,5 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
 
 </project>
