@@ -1,6 +1,8 @@
 package dev.teraprath.gamelib.task;
 
 import dev.teraprath.gamelib.Game;
+import dev.teraprath.gamelib.events.GameStateChangeEvent;
+import dev.teraprath.gamelib.events.TaskCountEvent;
 import dev.teraprath.gamelib.state.GameState;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -31,19 +33,20 @@ public class CountdownTask {
     public void start() {
         game.info(String.format("New Task started: %s, %s, %d seconds", startState, endState, countdown));
         game.info(String.format("UUID: %s", uuid));
-        plugin.getServer().getScheduler().runTaskTimer(plugin, task -> {
-            while (game.getGameState().equals(startState) && !cancelled) {
+        while (game.getGameState().equals(startState) && !cancelled) {
+            plugin.getServer().getScheduler().runTaskTimer(plugin, task -> {
                 game.info(String.format("Task (%s) : %d seconds", uuid, countdown));
                 if (countdown == 0) {
                     game.setGameState(endState);
                 }
                 countdown--;
-            }
-        }, 20L, 20L);
+                plugin.getServer().getPluginManager().callEvent(new TaskCountEvent(this, game));
+            }, 20L, 20L);
+        }
     }
 
-    public void setCancelled(boolean cancelled) {
-        this.cancelled = cancelled;
+    public void setCancelled(boolean cancel) {
+        this.cancelled = cancel;
     }
 
     public void setCount(int count) {

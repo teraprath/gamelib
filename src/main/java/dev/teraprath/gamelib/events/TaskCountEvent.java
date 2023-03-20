@@ -5,6 +5,9 @@ import dev.teraprath.gamelib.task.CountdownTask;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 public class TaskCountEvent extends Event implements Cancellable {
 
@@ -12,7 +15,7 @@ public class TaskCountEvent extends Event implements Cancellable {
     private final Game game;
     private boolean cancelled;
 
-    public TaskCountEvent(final CountdownTask task, final Game game) {
+    public TaskCountEvent(@Nonnull CountdownTask task, @Nonnull final Game game) {
         this.task = task;
         this.game = game;
         this.cancelled = false;
@@ -25,17 +28,19 @@ public class TaskCountEvent extends Event implements Cancellable {
 
     @Override
     public void setCancelled(boolean cancel) {
-        this.task.setCancelled(true);
         this.cancelled = cancel;
+        this.task.setCancelled(true);
     }
 
     @Override
-    public HandlerList getHandlers() {
-        return null;
+    public @NotNull HandlerList getHandlers() {
+        return new HandlerList();
+    }
+
+    public CountdownTask getTask() {
+        return this.task;
     }
 
     public Game getGame() { return this.game; }
-
-    public CountdownTask getTask() { return this.task; }
 
 }
