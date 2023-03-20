@@ -33,14 +33,24 @@ public class CountdownTask {
         game.info(String.format("New Task started: %s, %s, %d seconds", startState, endState, countdown));
         game.info(String.format("UUID: %s", uuid));
         plugin.getServer().getScheduler().runTaskTimer(plugin, task -> {
-            assert game.getGameState().equals(startState) && !cancelled;
-            game.info(String.format("Task (%s) : %d seconds", uuid, countdown));
-            if (countdown == 0) {
-                setCancelled(true);
-                game.setGameState(endState);
+
+            if (countdown == 0) { game.setGameState(endState); }
+
+            // Check if state is changed or if task is cancelled
+            if (game.getGameState().equals(endState) || cancelled) {
+                task.cancel();
             }
-            countdown--;
+
+            // Check min players, if state is lobby
+            if (game.getGameState().equals(GameState.LOBBY) && game.getPlayers().size() < game.getMinPlayers()) {
+                task.cancel();
+            }
+
             plugin.getServer().getPluginManager().callEvent(new TaskCountEvent(this, this.game));
+            game.info(String.format("Task (%s) : %d seconds", uuid, countdown));
+
+            countdown--;
+
         }, 20L, 20L);
     }
 

@@ -42,6 +42,10 @@ public class TaskCountEvent extends Event implements Cancellable {
         return HANDLER_LIST;
     }
 
+    public int getCount() {
+        return this.task.getCount();
+    }
+
     public CountdownTask getTask() {
         return this.task;
     }

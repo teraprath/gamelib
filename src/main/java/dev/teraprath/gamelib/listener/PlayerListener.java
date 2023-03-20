@@ -3,6 +3,7 @@ package dev.teraprath.gamelib.listener;
 import dev.teraprath.gamelib.Game;
 import dev.teraprath.gamelib.state.GameState;
 import dev.teraprath.gamelib.task.CountdownTask;
+import dev.teraprath.gamelib.team.Team;
 import dev.teraprath.gamelib.utils.PlayerUtils;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -11,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -31,12 +33,15 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
+
         final Player player = e.getPlayer();
+
         new PlayerUtils(player).reset();
         e.setJoinMessage(null);
 
+        // Check game state
         switch (game.getGameState()) {
-            case LOBBY -> new CountdownTask(plugin, game, GameState.LOBBY, GameState.GAME, 15).start();
+            case LOBBY -> checkMinPlayers(player);
             case GAME, END -> new PlayerUtils(player).toSpectator();
             default -> {
             }
@@ -46,18 +51,65 @@ public class PlayerListener implements Listener {
 
     }
 
+    private void checkMinPlayers(final Player player) {
+        if (game.getPlayers().size() >= game.getMinPlayers()) {
+            game.getPlayers().add(player);
+            new CountdownTask(plugin, game, GameState.LOBBY, GameState.GAME, game.getLobbyCountdown()).start();
+        }
+    }
+
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
+
         final Player player = e.getPlayer();
         e.setQuitMessage(null);
+        game.getPlayers().remove(player);
+
         game.info("Player left: " + player.getName() + " | UUID: " + player.getUniqueId() + " | GameState: " + game.getGameState());
     }
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent e) {
-        if (game.getGameState().equals(GameState.GAME)) {
+
+        assert e.getEntity() instanceof Player;
+
+        // Check if game is running
+        if (game.getGameState().equals(GameState.GAME) || game.getGameState().equals(GameState.END)) {
             e.setCancelled(true);
         }
+
+    }
+
+    @EventHandler
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {
+
+        assert e.getEntity() instanceof Player;
+
+        // Check if game is running
+        if (game.getGameState().equals(GameState.GAME) || game.getGameState().equals(GameState.END)) {
+            e.setCancelled(true);
+        }
+
+        // Check if attacker is a player
+        if (e.getDamager() instanceof Player) {
+
+            final Player victim = (Player) e.getEntity();
+
+            // Check friendly fire
+            if (game.getTeamByPlayer(victim) != null) {
+                final Player attacker = (Player) e.getDamager();
+                final Team victimTeam = game.getTeamByPlayer(victim);
+                final Team attackerTeam = game.getTeamByPlayer(attacker);
+                assert victimTeam != null && attackerTeam != null;
+                if (victimTeam.equals(attackerTeam)) {
+                    if (victimTeam.isFriendlyFire()) {
+                        e.setCancelled(true);
+                    }
+                }
+            }
+
+        }
+
     }
 
     @EventHandler
