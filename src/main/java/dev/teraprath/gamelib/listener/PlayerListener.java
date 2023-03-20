@@ -52,8 +52,12 @@ public class PlayerListener implements Listener {
     }
 
     private void checkMinPlayers(final Player player) {
-        if (game.getPlayers().size() >= game.getMinPlayers()) {
+
+        if (game.getPlayers().size() < game.getMaxPlayers()) {
             game.getPlayers().add(player);
+        }
+
+        if (game.getPlayers().size() >= game.getMinPlayers()) {
             new CountdownTask(plugin, game, GameState.LOBBY, GameState.GAME, game.getLobbyCountdown()).start();
         }
     }

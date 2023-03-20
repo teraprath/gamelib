@@ -3,9 +3,11 @@ package dev.teraprath.gamelib.team;
 import dev.teraprath.gamelib.Game;
 import dev.teraprath.gamelib.events.TeamJoinEvent;
 import dev.teraprath.gamelib.events.TeamQuitEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Scoreboard;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -35,6 +37,12 @@ public class Team {
         this.member = new ArrayList<>();
         this.points = 0;
         this.friendlyFire = true;
+
+        // Register scoreboard team
+        final Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+        scoreboard.registerNewTeam(this.name);
+        if (prefix != null) { scoreboard.getTeam(this.name).setPrefix(prefix); }
+        if (color != null) { scoreboard.getTeam(this.name).setColor(color); }
     }
 
     public void setFriendlyFire(boolean enabled) {
@@ -85,6 +93,7 @@ public class Team {
         assert member.size() > maxPlayers;
         member.add(player);
         plugin.getServer().getPluginManager().callEvent(new TeamJoinEvent(player, this, this.game));
+        plugin.getServer().getScoreboardManager().getMainScoreboard().getTeam(this.name).addPlayer(player);
         game.info("Team update: " + this.getName() + " (" + this.getUniqueId() + ") -> ADDED: " + player.getName());
     }
 
