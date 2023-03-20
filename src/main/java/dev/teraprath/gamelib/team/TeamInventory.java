@@ -1,6 +1,5 @@
 package dev.teraprath.gamelib.team;
 
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,10 +36,8 @@ public class TeamInventory {
         });
     }
 
-    public void giveContents(@Nonnull final Player player) {
-        this.inventory.forEach((integer, itemStack) -> {
-            player.getInventory().setItem(integer, itemStack);
-        });
+    public Map<Integer, ItemStack> getContents() {
+        return this.inventory;
     }
 
 }

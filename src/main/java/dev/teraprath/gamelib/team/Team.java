@@ -139,4 +139,14 @@ public class Team {
         return this.spawnLocation;
     }
 
+    public void giveInventory() {
+        this.member.forEach(this::giveInventory);
+    }
+
+    public void giveInventory(@Nonnull final Player player) {
+        this.getInventory().getContents().forEach((integer, itemStack) -> {
+            player.getInventory().setItem(integer, itemStack);
+        });
+    }
+
 }

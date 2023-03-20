@@ -5,6 +5,7 @@ import dev.teraprath.gamelib.state.GameState;
 import dev.teraprath.gamelib.task.CountdownTask;
 import dev.teraprath.gamelib.team.Team;
 import dev.teraprath.gamelib.utils.PlayerUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -47,14 +48,12 @@ public class PlayerListener implements Listener {
             }
         }
 
-        game.info("Player joined: " + player.getName() + " | UUID: " + player.getUniqueId() + " | GameState: " + game.getGameState());
-
     }
 
     private void checkMinPlayers(final Player player) {
 
         if (game.getPlayers().size() < game.getMaxPlayers()) {
-            game.getPlayers().add(player);
+            game.join(player);
         }
 
         if (game.getPlayers().size() >= game.getMinPlayers()) {
@@ -67,9 +66,8 @@ public class PlayerListener implements Listener {
 
         final Player player = e.getPlayer();
         e.setQuitMessage(null);
-        game.getPlayers().remove(player);
+        game.quit(player);
 
-        game.info("Player left: " + player.getName() + " | UUID: " + player.getUniqueId() + " | GameState: " + game.getGameState());
     }
 
     @EventHandler
@@ -114,6 +112,17 @@ public class PlayerListener implements Listener {
 
         }
 
+    }
+
+    @EventHandler
+    public void onChat(AsyncPlayerChatEvent e) {
+        final Player player = e.getPlayer();
+        final Team team = game.getTeamByPlayer(player);
+        if (team != null) {
+            e.setFormat(team.getPrefix() + team.getColor() + player.getName() + " §8» §7" + "%2$s");
+            return;
+        }
+        e.setFormat(ChatColor.GRAY + player.getName() + " §8» §7" + "%2$s");
     }
 
     @EventHandler
