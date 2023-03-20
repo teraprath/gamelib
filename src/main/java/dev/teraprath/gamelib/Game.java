@@ -24,20 +24,24 @@ public class Game {
     private final int minPlayers;
     private final int maxPlayers;
     private final boolean debug;
+    private final int lobbyCountdown;
+    private final int shutdownCountdown;
+    private final int gameLength;
     private JavaPlugin plugin;
     private GameState gameState;
     private Map<UUID, Team> teams;
     private ArrayList<Player> players;
-    private int lobbyCountdown;
     private boolean waiting;
 
-    public Game(@Nonnegative int minPlayers, @Nonnegative int maxPlayers, boolean debug) {
+    public Game(@Nonnegative int minPlayers, @Nonnegative int maxPlayers, @Nonnegative int gameLength, @Nonnegative int lobbyCountdown, @Nonnegative int shutdownCountdown,  boolean debug) {
         this.minPlayers = minPlayers;
         this.maxPlayers = maxPlayers;
+        this.lobbyCountdown = lobbyCountdown;
+        this.shutdownCountdown = shutdownCountdown;
+        this.gameLength = gameLength;
         this.debug = debug;
         this.teams = new HashMap<>();
         this.players = new ArrayList<>();
-        this.lobbyCountdown = 60;
         this.waiting = true;
     }
 
@@ -78,7 +82,11 @@ public class Game {
     public void setGameState(@Nonnull GameState gameState) {
         info("GameState update: " + this.gameState + " -> " + gameState);
         this.gameState = gameState;
+        listenState(gameState);
         plugin.getServer().getPluginManager().callEvent(new GameStateChangeEvent(this.gameState, this));
+    }
+
+    private void listenState(GameState gameState) {
         switch (gameState) {
             case GAME -> {
                 for (Team team : teams.values()) {
@@ -90,9 +98,9 @@ public class Game {
                         });
                     }
                 }
-                new CountdownTask(plugin, this, GameState.GAME, GameState.END, 300);
+                new CountdownTask(plugin, this, GameState.GAME, GameState.END, this.getGameLength()).start();
             }
-            case END -> new CountdownTask(plugin, this, GameState.END, GameState.SHUTDOWN, 15);
+            case END -> new CountdownTask(plugin, this, GameState.END, GameState.SHUTDOWN, this.getShutdownCountdown()).start();
             case SHUTDOWN -> plugin.getServer().shutdown();
         }
     }
@@ -195,8 +203,12 @@ public class Game {
         return this.lobbyCountdown;
     }
 
-    public void setLobbyCountdown(int seconds) {
-        this.lobbyCountdown = seconds;
+    public int getShutdownCountdown() {
+        return this.shutdownCountdown;
+    }
+
+    public int getGameLength() {
+        return this.gameLength;
     }
 
 }

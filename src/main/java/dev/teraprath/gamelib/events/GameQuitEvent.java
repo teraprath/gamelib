@@ -1,6 +1,7 @@
 package dev.teraprath.gamelib.events;
 
 import dev.teraprath.gamelib.Game;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -17,6 +18,9 @@ public class GameQuitEvent extends Event {
     public GameQuitEvent(@Nonnull Player player, @Nonnull final Game game) {
         this.player = player;
         this.game = game;
+        game.getTeams().forEach(team -> {
+            team.removeMember(player);
+        });
     }
 
     @Override
@@ -29,5 +33,9 @@ public class GameQuitEvent extends Event {
     public Player getPlayer() { return this.player; }
 
     public Game getGame() { return this.game; }
+
+    public void setQuitMessage(String quitMessage) {
+        Bukkit.broadcastMessage(quitMessage);
+    }
 
 }

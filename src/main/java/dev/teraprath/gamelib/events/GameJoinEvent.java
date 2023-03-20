@@ -1,6 +1,7 @@
 package dev.teraprath.gamelib.events;
 
 import dev.teraprath.gamelib.Game;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -29,5 +30,9 @@ public class GameJoinEvent extends Event {
     public Player getPlayer() { return this.player; }
 
     public Game getGame() { return this.game; }
+
+    public void setJoinMessage(String joinMessage) {
+        Bukkit.broadcastMessage(joinMessage);
+    }
 
 }

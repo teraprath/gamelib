@@ -36,6 +36,7 @@ public class PlayerListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
 
         final Player player = e.getPlayer();
+        e.setJoinMessage(null);
         new PlayerUtils(player).reset();
 
         // Check game state
@@ -67,6 +68,7 @@ public class PlayerListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent e) {
 
         final Player player = e.getPlayer();
+        e.setQuitMessage(null);
         game.quit(player);
 
     }
@@ -121,7 +123,8 @@ public class PlayerListener implements Listener {
         final Team team = game.getTeamByPlayer(player);
         if (team != null) {
             String prefix = team.getPrefix();
-            e.setFormat((prefix != null ? prefix : "") + team.getColor() + player.getName() + " §8» §f" + "%2$s");
+            ChatColor color = team.getColor();
+            e.setFormat((prefix != null ? prefix : "") + (color != null ? color : ChatColor.GRAY) + player.getName() + " §8» §f" + "%2$s");
             return;
         }
         e.setFormat(ChatColor.GRAY + player.getName() + " §8» §f" + "%2$s");

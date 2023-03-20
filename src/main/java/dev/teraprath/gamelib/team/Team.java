@@ -47,10 +47,11 @@ public class Team {
             plugin.getServer().getOnlinePlayers().forEach(all -> {
                 if (game.getTeamByPlayer(all) != null) {
                     Team team = game.getTeamByPlayer(all);
-                    if (scoreboard.getTeam(team.getName()) == null) { scoreboard.registerNewTeam(team.getName()); }
-                    if (color != null) { scoreboard.getTeam(team.getName()).setColor(color); }
-                    if (prefix != null) { scoreboard.getTeam(team.getName()).setPrefix(prefix); }
-                    scoreboard.getTeam(team.getName()).addPlayer(all);
+                    String uuid = team.getUniqueId().toString();
+                    if (scoreboard.getTeam(uuid) == null) { scoreboard.registerNewTeam(uuid); }
+                    if (color != null) { scoreboard.getTeam(uuid).setColor(color); }
+                    if (prefix != null) { scoreboard.getTeam(uuid).setPrefix(prefix); }
+                    scoreboard.getTeam(uuid).addPlayer(all);
                 }
             });
         });
