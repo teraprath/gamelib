@@ -4,6 +4,7 @@ public enum GameState {
 
     LOBBY,
     GAME,
-    END;
+    END,
+    SHUTDOWN;
 
 }

@@ -36,9 +36,7 @@ public class PlayerListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
 
         final Player player = e.getPlayer();
-
         new PlayerUtils(player).reset();
-        e.setJoinMessage(null);
 
         // Check game state
         switch (game.getGameState()) {
@@ -56,16 +54,19 @@ public class PlayerListener implements Listener {
             game.join(player);
         }
 
+        assert game.isWaiting();
+
         if (game.getPlayers().size() >= game.getMinPlayers()) {
+            game.setWaiting(false);
             new CountdownTask(plugin, game, GameState.LOBBY, GameState.GAME, game.getLobbyCountdown()).start();
         }
+
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
 
         final Player player = e.getPlayer();
-        e.setQuitMessage(null);
         game.quit(player);
 
     }

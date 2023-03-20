@@ -43,6 +43,7 @@ public class CountdownTask {
 
             // Check min players, if state is lobby
             if (game.getGameState().equals(GameState.LOBBY) && game.getPlayers().size() < game.getMinPlayers()) {
+                game.setWaiting(true);
                 task.cancel();
             }
 

@@ -5,6 +5,7 @@ import dev.teraprath.gamelib.events.GameQuitEvent;
 import dev.teraprath.gamelib.events.GameStateChangeEvent;
 import dev.teraprath.gamelib.listener.PlayerListener;
 import dev.teraprath.gamelib.state.GameState;
+import dev.teraprath.gamelib.task.CountdownTask;
 import dev.teraprath.gamelib.team.Team;
 import org.bukkit.GameRule;
 import org.bukkit.entity.Player;
@@ -28,6 +29,7 @@ public class Game {
     private Map<UUID, Team> teams;
     private ArrayList<Player> players;
     private int lobbyCountdown;
+    private boolean waiting;
 
     public Game(@Nonnegative int minPlayers, @Nonnegative int maxPlayers, boolean debug) {
         this.minPlayers = minPlayers;
@@ -36,6 +38,7 @@ public class Game {
         this.teams = new HashMap<>();
         this.players = new ArrayList<>();
         this.lobbyCountdown = 60;
+        this.waiting = true;
     }
 
     public void init(@Nonnull JavaPlugin plugin) {
@@ -55,6 +58,14 @@ public class Game {
         info("GameLib registered.");
     }
 
+    public void setWaiting(boolean enabled) {
+        this.waiting = enabled;
+    }
+
+    public boolean isWaiting() {
+        return this.waiting;
+    }
+
     private void registerEvents() {
         final PluginManager pm = plugin.getServer().getPluginManager();
         pm.registerEvents(new PlayerListener(plugin, this), plugin);
@@ -68,16 +79,21 @@ public class Game {
         info("GameState update: " + this.gameState + " -> " + gameState);
         this.gameState = gameState;
         plugin.getServer().getPluginManager().callEvent(new GameStateChangeEvent(this.gameState, this));
-        if (gameState.equals(GameState.GAME)) {
-            for (Team team : teams.values()) {
-                team.giveInventory();
-                if (team.getSpawnLocation() != null) {
-                    team.getMember().forEach(player -> {
-                        player.setBedSpawnLocation(team.getSpawnLocation());
-                        player.teleport(team.getSpawnLocation());
-                    });
+        switch (gameState) {
+            case GAME -> {
+                for (Team team : teams.values()) {
+                    team.giveInventory();
+                    if (team.getSpawnLocation() != null) {
+                        team.getMember().forEach(player -> {
+                            player.setBedSpawnLocation(team.getSpawnLocation());
+                            player.teleport(team.getSpawnLocation());
+                        });
+                    }
                 }
+                new CountdownTask(plugin, this, GameState.GAME, GameState.END, 300);
             }
+            case END -> new CountdownTask(plugin, this, GameState.END, GameState.SHUTDOWN, 15);
+            case SHUTDOWN -> plugin.getServer().shutdown();
         }
     }
 

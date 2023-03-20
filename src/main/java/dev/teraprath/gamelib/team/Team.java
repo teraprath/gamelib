@@ -50,6 +50,7 @@ public class Team {
                     if (scoreboard.getTeam(team.getName()) == null) { scoreboard.registerNewTeam(team.getName()); }
                     if (color != null) { scoreboard.getTeam(team.getName()).setColor(color); }
                     if (prefix != null) { scoreboard.getTeam(team.getName()).setPrefix(prefix); }
+                    scoreboard.getTeam(team.getName()).addPlayer(all);
                 }
             });
         });
