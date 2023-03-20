@@ -3,8 +3,8 @@ package dev.teraprath.gamelib.team;
 import dev.teraprath.gamelib.Game;
 import dev.teraprath.gamelib.events.TeamJoinEvent;
 import dev.teraprath.gamelib.events.TeamQuitEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
@@ -26,7 +26,8 @@ public class Team {
     private ChatColor color;
     private int points;
     private boolean friendlyFire;
-
+    private TeamInventory inventory;
+    private Location spawnLocation;
 
     public Team(@Nonnull JavaPlugin plugin, @Nonnull Game game, @Nonnull String name, @Nonnegative int maxPlayers) {
         this.plugin = plugin;
@@ -37,12 +38,21 @@ public class Team {
         this.member = new ArrayList<>();
         this.points = 0;
         this.friendlyFire = true;
+        this.inventory = new TeamInventory();
+    }
 
-        // Register scoreboard team
-        final Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-        scoreboard.registerNewTeam(this.name);
-        if (prefix != null) { scoreboard.getTeam(this.name).setPrefix(prefix); }
-        if (color != null) { scoreboard.getTeam(this.name).setColor(color); }
+    private void update() {
+        plugin.getServer().getOnlinePlayers().forEach(player -> {
+            Scoreboard scoreboard = player.getScoreboard();
+            plugin.getServer().getOnlinePlayers().forEach(all -> {
+                if (game.getTeamByPlayer(all) != null) {
+                    Team team = game.getTeamByPlayer(all);
+                    if (scoreboard.getTeam(team.getName()) == null) { scoreboard.registerNewTeam(team.getName()); }
+                    if (color != null) { scoreboard.getTeam(team.getName()).setColor(color); }
+                    if (prefix != null) { scoreboard.getTeam(team.getName()).setPrefix(prefix); }
+                }
+            });
+        });
     }
 
     public void setFriendlyFire(boolean enabled) {
@@ -95,12 +105,14 @@ public class Team {
         plugin.getServer().getPluginManager().callEvent(new TeamJoinEvent(player, this, this.game));
         plugin.getServer().getScoreboardManager().getMainScoreboard().getTeam(this.name).addPlayer(player);
         game.info("Team update: " + this.getName() + " (" + this.getUniqueId() + ") -> ADDED: " + player.getName());
+        update();
     }
 
     public void removeMember(@Nonnull final Player player) {
         member.remove(player);
         plugin.getServer().getPluginManager().callEvent(new TeamQuitEvent(player, this, this.game));
         game.info("Team update: " + this.getName() + " (" + this.getUniqueId() + ") -> REMOVED: " + player.getName());
+        update();
     }
 
     public ArrayList<Player> getMember() {
@@ -113,6 +125,18 @@ public class Team {
 
     public String getName() {
         return this.name;
+    }
+
+    public TeamInventory getInventory() {
+        return this.inventory;
+    }
+
+    public void setSpawnLocation(Location location) {
+        this.spawnLocation = location;
+    }
+
+    public Location getSpawnLocation() {
+        return this.spawnLocation;
     }
 
 }

@@ -152,6 +152,10 @@ public class Game {
         return this.players;
     }
 
+    public void removePlayer(@Nonnull Player player) {
+        this.players.remove(player);
+    }
+
     public int getLobbyCountdown() {
         return this.lobbyCountdown;
     }
