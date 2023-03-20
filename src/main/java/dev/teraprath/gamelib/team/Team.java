@@ -103,7 +103,6 @@ public class Team {
         assert member.size() > maxPlayers;
         member.add(player);
         plugin.getServer().getPluginManager().callEvent(new TeamJoinEvent(player, this, this.game));
-        plugin.getServer().getScoreboardManager().getMainScoreboard().getTeam(this.name).addPlayer(player);
         game.info("Team update: " + this.getName() + " (" + this.getUniqueId() + ") -> ADDED: " + player.getName());
         update();
     }

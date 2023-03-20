@@ -119,10 +119,11 @@ public class PlayerListener implements Listener {
         final Player player = e.getPlayer();
         final Team team = game.getTeamByPlayer(player);
         if (team != null) {
-            e.setFormat(team.getPrefix() + team.getColor() + player.getName() + " §8» §7" + "%2$s");
+            String prefix = team.getPrefix();
+            e.setFormat((prefix != null ? prefix : "") + team.getColor() + player.getName() + " §8» §f" + "%2$s");
             return;
         }
-        e.setFormat(ChatColor.GRAY + player.getName() + " §8» §7" + "%2$s");
+        e.setFormat(ChatColor.GRAY + player.getName() + " §8» §f" + "%2$s");
     }
 
     @EventHandler

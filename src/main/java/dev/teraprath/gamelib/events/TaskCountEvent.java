@@ -1,6 +1,7 @@
 package dev.teraprath.gamelib.events;
 
 import dev.teraprath.gamelib.Game;
+import dev.teraprath.gamelib.state.GameState;
 import dev.teraprath.gamelib.task.CountdownTask;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -44,6 +45,10 @@ public class TaskCountEvent extends Event implements Cancellable {
 
     public int getCount() {
         return this.task.getCount();
+    }
+
+    public GameState getGameState() {
+        return this.task.getStartState();
     }
 
     public CountdownTask getTask() {
