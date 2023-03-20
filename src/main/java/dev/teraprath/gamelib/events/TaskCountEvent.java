@@ -13,6 +13,7 @@ public class TaskCountEvent extends Event implements Cancellable {
 
     private final CountdownTask task;
     private final Game game;
+    private static final HandlerList HANDLER_LIST = new HandlerList();
     private boolean cancelled;
 
     public TaskCountEvent(@Nonnull CountdownTask task, @Nonnull final Game game) {
@@ -34,7 +35,11 @@ public class TaskCountEvent extends Event implements Cancellable {
 
     @Override
     public @NotNull HandlerList getHandlers() {
-        return new HandlerList();
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 
     public CountdownTask getTask() {

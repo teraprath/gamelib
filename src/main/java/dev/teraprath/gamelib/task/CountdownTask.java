@@ -1,7 +1,6 @@
 package dev.teraprath.gamelib.task;
 
 import dev.teraprath.gamelib.Game;
-import dev.teraprath.gamelib.events.GameStateChangeEvent;
 import dev.teraprath.gamelib.events.TaskCountEvent;
 import dev.teraprath.gamelib.state.GameState;
 import org.bukkit.plugin.java.JavaPlugin;

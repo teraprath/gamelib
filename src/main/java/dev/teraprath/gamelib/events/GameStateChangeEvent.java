@@ -11,6 +11,7 @@ import javax.annotation.Nonnull;
 public class GameStateChangeEvent extends Event {
 
     private final GameState gameState;
+    private static final HandlerList HANDLER_LIST = new HandlerList();
     private final Game game;
 
     public GameStateChangeEvent(@Nonnull final GameState gameState, @Nonnull final Game game) {
@@ -20,7 +21,11 @@ public class GameStateChangeEvent extends Event {
 
     @Override
     public @NotNull HandlerList getHandlers() {
-        return new HandlerList();
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 
     public GameState getGameState() {
