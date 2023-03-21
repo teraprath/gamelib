@@ -17,7 +17,7 @@ Maven
 <dependency>
     <groupId>com.github.teraprath</groupId>
     <artifactId>gamelib</artifactId>
-    <version>1.3.1-STABLE</version>
+    <version>1.3.2-STABLE</version>
 </dependency>
 ````
 
