@@ -1,8 +1,10 @@
 [![](https://jitpack.io/v/teraprath/gamelib.svg)](https://jitpack.io/#teraprath/gamelib)
 
-****
+# gamelib
 
-Maven
+Game libary for Spigot 1.19+
+
+## Maven
 
 ````xml
 
@@ -21,9 +23,7 @@ Maven
 </dependency>
 ````
 
-****
-
-Gradle
+## Gradle
 
 ````groovy
 repositories {
@@ -35,3 +35,7 @@ dependencies {
     implementation 'com.github.teraprath:gamelib:1.3.1-STABLE'
 }
 ````
+
+## Setup
+
+Visit [wiki](https://github.com/teraprath/gamelib/wiki/) page to see usage guide.
