@@ -19,7 +19,7 @@ Game libary for Spigot 1.19+
 <dependency>
     <groupId>com.github.teraprath</groupId>
     <artifactId>gamelib</artifactId>
-    <version>1.3.3-STABLE</version>
+    <version>INSERT_VERSION_HERE</version>
 </dependency>
 ````
 
@@ -32,7 +32,7 @@ repositories {
 ````
 ````
 dependencies {
-    implementation 'com.github.teraprath:gamelib:1.3.1-STABLE'
+    implementation 'com.github.teraprath:gamelib:INSERT_VERSION_HERE'
 }
 ````
 
