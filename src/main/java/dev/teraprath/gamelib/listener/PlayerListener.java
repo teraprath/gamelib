@@ -101,10 +101,10 @@ public class PlayerListener implements Listener {
             final Player victim = (Player) e.getEntity();
 
             // Check friendly fire
-            if (game.getTeamByPlayer(victim) != null) {
+            if (game.getTeamManager().parseTeam(victim) != null) {
                 final Player attacker = (Player) e.getDamager();
-                final Team victimTeam = game.getTeamByPlayer(victim);
-                final Team attackerTeam = game.getTeamByPlayer(attacker);
+                final Team victimTeam = game.getTeamManager().parseTeam(victim);
+                final Team attackerTeam = game.getTeamManager().parseTeam(attacker);
                 assert victimTeam != null && attackerTeam != null;
                 if (victimTeam.equals(attackerTeam)) {
                     if (victimTeam.isFriendlyFire()) {
@@ -120,7 +120,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
         final Player player = e.getPlayer();
-        final Team team = game.getTeamByPlayer(player);
+        final Team team = game.getTeamManager().parseTeam(player);
         if (team != null) {
             String prefix = team.getPrefix();
             ChatColor color = team.getColor();

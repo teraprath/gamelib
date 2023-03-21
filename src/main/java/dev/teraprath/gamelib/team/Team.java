@@ -45,8 +45,8 @@ public class Team {
         plugin.getServer().getOnlinePlayers().forEach(player -> {
             Scoreboard scoreboard = player.getScoreboard();
             plugin.getServer().getOnlinePlayers().forEach(all -> {
-                if (game.getTeamByPlayer(all) != null) {
-                    Team team = game.getTeamByPlayer(all);
+                if (game.getTeamManager().parseTeam(all) != null) {
+                    Team team = game.getTeamManager().parseTeam(all);
                     String uuid = team.getUniqueId().toString();
                     if (scoreboard.getTeam(uuid) == null) { scoreboard.registerNewTeam(uuid); }
                     if (color != null) { scoreboard.getTeam(uuid).setColor(color); }
@@ -103,6 +103,7 @@ public class Team {
 
     public void addMember(@Nonnull final Player player) {
         assert member.size() > maxPlayers;
+        game.getTeamManager().getTeams().forEach(team -> { team.removeMember(player); });
         member.add(player);
         plugin.getServer().getPluginManager().callEvent(new TeamJoinEvent(player, this, this.game));
         game.info("Team update: " + this.getName() + " (" + this.getUniqueId() + ") -> ADDED: " + player.getName());
@@ -140,11 +141,11 @@ public class Team {
         return this.spawnLocation;
     }
 
-    public void giveInventory() {
-        this.member.forEach(this::giveInventory);
+    public void equip() {
+        this.member.forEach(this::equip);
     }
 
-    public void giveInventory(@Nonnull final Player player) {
+    public void equip(@Nonnull final Player player) {
         this.getInventory().getContents().forEach((integer, itemStack) -> {
             player.getInventory().setItem(integer, itemStack);
         });

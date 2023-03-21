@@ -18,9 +18,6 @@ public class GameQuitEvent extends Event {
     public GameQuitEvent(@Nonnull Player player, @Nonnull final Game game) {
         this.player = player;
         this.game = game;
-        game.getTeams().forEach(team -> {
-            team.removeMember(player);
-        });
     }
 
     @Override
