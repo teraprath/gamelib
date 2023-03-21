@@ -25,7 +25,6 @@ public class Team {
     private String prefix;
     private ChatColor color;
     private int points;
-    private boolean friendlyFire;
     private TeamInventory inventory;
     private Location spawnLocation;
 
@@ -37,7 +36,6 @@ public class Team {
         this.uuid = UUID.randomUUID();
         this.member = new ArrayList<>();
         this.points = 0;
-        this.friendlyFire = true;
         this.inventory = new TeamInventory();
     }
 
@@ -55,14 +53,6 @@ public class Team {
                 }
             });
         });
-    }
-
-    public void setFriendlyFire(boolean enabled) {
-        this.friendlyFire = enabled;
-    }
-
-    public boolean isFriendlyFire() {
-        return this.friendlyFire;
     }
 
     public void setPrefix(@Nonnull String prefix) {
@@ -149,6 +139,10 @@ public class Team {
         this.getInventory().getContents().forEach((integer, itemStack) -> {
             player.getInventory().setItem(integer, itemStack);
         });
+    }
+
+    public void setInventory(@Nonnull TeamInventory teamInventory) {
+        this.inventory = teamInventory;
     }
 
 }

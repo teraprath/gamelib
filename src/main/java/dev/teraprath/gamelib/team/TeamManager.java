@@ -16,11 +16,13 @@ public class TeamManager {
     private final JavaPlugin plugin;
     private final Game game;
     private final Map<UUID, Team> teams;
+    private boolean friendlyFire;
 
     public TeamManager(@Nonnull JavaPlugin plugin, @Nonnull Game game) {
         this.plugin = plugin;
         this.game = game;
         this.teams = new HashMap<>();
+        this.friendlyFire = true;
     }
 
     public ArrayList<Team> getTeams() {
@@ -83,6 +85,14 @@ public class TeamManager {
             }
         }
         return null;
+    }
+
+    public void setFriendlyFire(boolean enabled) {
+        this.friendlyFire = enabled;
+    }
+
+    public boolean isFriendlyFire() {
+        return this.friendlyFire;
     }
 
 }

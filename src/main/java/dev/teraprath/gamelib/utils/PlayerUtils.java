@@ -1,14 +1,19 @@
 package dev.teraprath.gamelib.utils;
 
+import dev.teraprath.gamelib.Game;
+import dev.teraprath.gamelib.events.GamePlayerDropEvent;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class PlayerUtils {
 
     private final Player player;
+    private final Game game;
 
-    public PlayerUtils(Player player) {
+    public PlayerUtils(Player player, Game game) {
         this.player = player;
+        this.game = game;
     }
 
     public void reset() {
@@ -26,6 +31,7 @@ public class PlayerUtils {
         player.setGameMode(GameMode.SPECTATOR);
         player.setAllowFlight(true);
         player.setFlying(true);
+        if (game.getSpectatorSpawn() != null) { player.teleport(game.getSpectatorSpawn()); }
     }
 
 }

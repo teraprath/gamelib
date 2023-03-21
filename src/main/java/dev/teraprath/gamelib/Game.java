@@ -1,14 +1,17 @@
 package dev.teraprath.gamelib;
 
-import dev.teraprath.gamelib.events.GameJoinEvent;
-import dev.teraprath.gamelib.events.GameQuitEvent;
+import dev.teraprath.gamelib.events.GameOverEvent;
+import dev.teraprath.gamelib.events.GamePlayerDropEvent;
+import dev.teraprath.gamelib.events.LobbyQuitEvent;
 import dev.teraprath.gamelib.events.GameStateChangeEvent;
 import dev.teraprath.gamelib.listener.PlayerListener;
 import dev.teraprath.gamelib.state.GameState;
 import dev.teraprath.gamelib.task.CountdownTask;
 import dev.teraprath.gamelib.team.Team;
 import dev.teraprath.gamelib.team.TeamManager;
+import dev.teraprath.gamelib.utils.PlayerUtils;
 import org.bukkit.GameRule;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -30,6 +33,13 @@ public class Game {
     private GameState gameState;
     private ArrayList<Player> players;
     private boolean waiting;
+    private Location lobbySpawn;
+    private Location spectatorSpawn;
+
+    private boolean VIPJoin;
+    private String VIPJoinPermission;
+    private String VIPJoinFullMessage;
+    private String VIPJoinKickMessage;
 
     public Game(@Nonnegative int minPlayers, @Nonnegative int maxPlayers,  boolean debug) {
         this.minPlayers = minPlayers;
@@ -40,6 +50,7 @@ public class Game {
         this.debug = debug;
         this.players = new ArrayList<>();
         this.waiting = true;
+        this.VIPJoin = false;
     }
 
     public Game init(@Nonnull JavaPlugin plugin) {
@@ -72,6 +83,30 @@ public class Game {
         info("shutdownCountdown: " + shutdownCountdown);
         info("minPlayers: " + minPlayers);
         info("maxPlayers: " + maxPlayers);
+    }
+
+    public Game enableVIPJoin(@Nonnull String permission, @Nonnull String fullMessage, @Nonnull String kickMessage) {
+        this.VIPJoin = true;
+        this.VIPJoinPermission = permission;
+        this.VIPJoinFullMessage = fullMessage;
+        this.VIPJoinKickMessage = kickMessage;
+        return this;
+    }
+
+    public boolean hasVIPJoin() {
+        return this.VIPJoin;
+    }
+
+    public String getVIPJoinPermission() {
+        return this.VIPJoinPermission;
+    }
+
+    public String getVIPJoinFullMessage() {
+        return this.VIPJoinFullMessage;
+    }
+
+    public String getVIPJoinKickMessage() {
+        return this.VIPJoinKickMessage;
     }
 
     public Game setGameLength(@Nonnegative int seconds) {
@@ -152,17 +187,28 @@ public class Game {
         return this.players;
     }
 
-    public void join(@Nonnull Player player) {
-        this.players.add(player);
-        plugin.getServer().getPluginManager().callEvent(new GameJoinEvent(player, this));
+    public void drop(@Nonnull Player player) {
+
+        this.players.remove(player);
+        new PlayerUtils(player, this).toSpectator();
+
+        if (gameState.equals(GameState.LOBBY)) {
+            plugin.getServer().getPluginManager().callEvent(new LobbyQuitEvent(player, this));
+        }
+
+        plugin.getServer().getPluginManager().callEvent(new GamePlayerDropEvent(player, this));
+
     }
 
-    public void quit(@Nonnull Player player) {
-        this.players.remove(player);
-        plugin.getServer().getPluginManager().callEvent(new GameQuitEvent(player, this));
-        getTeamManager().getTeams().forEach(team -> {
-            team.removeMember(player);
-        });
+    public void over(ArrayList<Player> winner) {
+        if (winner != null) {
+            players.forEach(player -> {
+                if (!winner.contains(player)) {
+                    drop(player);
+                }
+            });
+        }
+        plugin.getServer().getPluginManager().callEvent(new GameOverEvent(winner, this));
     }
 
     public int getLobbyCountdown() {
@@ -179,6 +225,22 @@ public class Game {
 
     public TeamManager getTeamManager() {
         return this.teamManager;
+    }
+
+    public void setLobbySpawn(Location location) {
+        this.lobbySpawn = location;
+    }
+
+    public Location getLobbySpawn() {
+        return this.lobbySpawn;
+    }
+
+    public void setSpectatorSpawn(Location location) {
+        this.spectatorSpawn = location;
+    }
+
+    public Location getSpectatorSpawn() {
+        return this.spectatorSpawn;
     }
 
 }

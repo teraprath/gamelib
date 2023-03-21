@@ -1,7 +1,7 @@
 package dev.teraprath.gamelib.task;
 
 import dev.teraprath.gamelib.Game;
-import dev.teraprath.gamelib.events.CountdownEvent;
+import dev.teraprath.gamelib.events.CountDownEvent;
 import dev.teraprath.gamelib.state.GameState;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -47,7 +47,7 @@ public class CountdownTask {
                 task.cancel();
             }
 
-            plugin.getServer().getPluginManager().callEvent(new CountdownEvent(this, this.game));
+            plugin.getServer().getPluginManager().callEvent(new CountDownEvent(this, this.game));
             game.info(String.format("Task (%s) : %d seconds", uuid, countdown));
 
             countdown--;

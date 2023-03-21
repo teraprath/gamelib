@@ -1,6 +1,7 @@
 package dev.teraprath.gamelib.listener;
 
 import dev.teraprath.gamelib.Game;
+import dev.teraprath.gamelib.events.LobbyJoinEvent;
 import dev.teraprath.gamelib.state.GameState;
 import dev.teraprath.gamelib.task.CountdownTask;
 import dev.teraprath.gamelib.team.Team;
@@ -9,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -33,26 +35,56 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
+    public void onPlayerLogin(PlayerLoginEvent e) {
+
+        final Player player = e.getPlayer();
+        if (e.getResult().equals(PlayerLoginEvent.Result.KICK_FULL)) {
+
+            if (game.getGameState().equals(GameState.GAME)) {
+                e.allow();
+                return;
+            }
+
+            if (game.hasVIPJoin()) {
+                if (player.hasPermission(game.getVIPJoinPermission())) {
+                    for (Player target : game.getPlayers()) {
+                        if (!(target.hasPermission(game.getVIPJoinPermission()))) {
+                            target.kickPlayer(game.getVIPJoinKickMessage());
+                            e.allow();
+                            return;
+                        }
+                    }
+                }
+                e.setKickMessage(game.getVIPJoinFullMessage());
+            }
+        }
+    }
+
+    @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
 
         final Player player = e.getPlayer();
+
         e.setJoinMessage(null);
-        new PlayerUtils(player).reset();
+        new PlayerUtils(player, game).reset();
 
         // Check game state
         switch (game.getGameState()) {
-            case LOBBY -> checkMinPlayers(player);
-            case GAME, END -> new PlayerUtils(player).toSpectator();
+            case LOBBY -> handleLobbyJoin(player);
+            case GAME, END -> new PlayerUtils(player, game).toSpectator();
             default -> {
             }
         }
 
     }
 
-    private void checkMinPlayers(final Player player) {
+    private void handleLobbyJoin(final Player player) {
+
+        if (game.getLobbySpawn() != null) { player.teleport(game.getLobbySpawn()); }
 
         if (game.getPlayers().size() < game.getMaxPlayers()) {
-            game.join(player);
+            game.getPlayers().add(player);
+            plugin.getServer().getPluginManager().callEvent(new LobbyJoinEvent(player, game));
         }
 
         assert game.isWaiting();
@@ -69,7 +101,12 @@ public class PlayerListener implements Listener {
 
         final Player player = e.getPlayer();
         e.setQuitMessage(null);
-        game.quit(player);
+
+        game.getTeamManager().getTeams().forEach(team -> {
+            team.removeMember(player);
+        });
+
+        game.drop(player);
 
     }
 
@@ -107,7 +144,7 @@ public class PlayerListener implements Listener {
                 final Team attackerTeam = game.getTeamManager().parseTeam(attacker);
                 assert victimTeam != null && attackerTeam != null;
                 if (victimTeam.equals(attackerTeam)) {
-                    if (victimTeam.isFriendlyFire()) {
+                    if (game.getTeamManager().isFriendlyFire()) {
                         e.setCancelled(true);
                     }
                 }
