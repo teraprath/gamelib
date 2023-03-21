@@ -19,7 +19,7 @@ Game libary for Spigot 1.19+
 <dependency>
     <groupId>com.github.teraprath</groupId>
     <artifactId>gamelib</artifactId>
-    <version>1.3.2-STABLE</version>
+    <version>1.3.3-STABLE</version>
 </dependency>
 ````
 
