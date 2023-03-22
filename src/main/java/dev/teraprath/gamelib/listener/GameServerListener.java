@@ -15,7 +15,6 @@ public class GameServerListener implements Listener {
 
     @EventHandler
     public void onServerListPing(ServerListPingEvent e) {
-        e.setMaxPlayers(game.getMaxPlayers());
         e.setMotd(game.getMotd(game.getGameState()));
     }
 

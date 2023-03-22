@@ -304,16 +304,18 @@ public class Game {
         return this.teamManager;
     }
 
-    public void setLobbySpawn(Location location) {
+    public Game setLobbySpawn(Location location) {
         this.lobbySpawn = location;
+        return this;
     }
 
     public Location getLobbySpawn() {
         return this.lobbySpawn;
     }
 
-    public void setSpectatorSpawn(Location location) {
+    public Game setSpectatorSpawn(Location location) {
         this.spectatorSpawn = location;
+        return this;
     }
 
     public Location getSpectatorSpawn() {

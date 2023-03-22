@@ -74,6 +74,8 @@ public class GameJoinQuitListener implements Listener {
         if (game.getPlayers().size() < game.getMaxPlayers()) {
             game.getPlayers().add(player);
             plugin.getServer().getPluginManager().callEvent(new LobbyJoinEvent(player, game));
+        } else {
+            new PlayerUtils(player, game).toSpectator();
         }
 
         assert game.isWaiting();
