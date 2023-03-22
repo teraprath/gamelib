@@ -13,6 +13,7 @@ import dev.teraprath.gamelib.team.Team;
 import dev.teraprath.gamelib.team.TeamManager;
 import dev.teraprath.gamelib.utils.PlayerUtils;
 import dev.teraprath.gamelib.utils.ServerUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -205,7 +206,12 @@ public class Game {
                 new CountdownTask(plugin, this, GameState.GAME, GameState.END, this.getGameLength()).start();
             }
             case END -> new CountdownTask(plugin, this, GameState.END, GameState.SHUTDOWN, this.getShutdownCountdown()).start();
-            case SHUTDOWN -> plugin.getServer().shutdown();
+            case SHUTDOWN -> {
+                plugin.getServer().getOnlinePlayers().forEach(player -> {
+                    player.kickPlayer(shutdownMessage == null ? ChatColor.RED + "Server restart" : shutdownMessage);
+                });
+                plugin.getServer().shutdown();
+            }
         }
     }
 
