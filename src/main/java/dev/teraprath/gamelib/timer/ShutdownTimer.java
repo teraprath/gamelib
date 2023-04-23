@@ -24,7 +24,9 @@ public class ShutdownTimer extends Timer {
     public void run() {
 
         if (game.getGameStateManager().getGameState().equals(GameState.END)) {
-            plugin.getServer().getPluginManager().callEvent(new ShutdownTimerRunEvent(this, this.game));
+            plugin.getServer().getScheduler().runTask(plugin, sync -> {
+                plugin.getServer().getPluginManager().callEvent(new ShutdownTimerRunEvent(this, this.game));
+            });
         } else {
             this.stop();
         }
@@ -33,7 +35,9 @@ public class ShutdownTimer extends Timer {
 
     @Override
     public void end() {
-        plugin.getServer().getPluginManager().callEvent(new ShutdownTimerEndEvent(this, this.game));
+        plugin.getServer().getScheduler().runTask(plugin, sync -> {
+            plugin.getServer().getPluginManager().callEvent(new ShutdownTimerEndEvent(this, this.game));
+        });
         plugin.getServer().shutdown();
     }
 

@@ -24,7 +24,9 @@ public class RunningTimer extends Timer {
     public void run() {
 
         if (game.getGameStateManager().getGameState().equals(GameState.RUNNING)) {
-            plugin.getServer().getPluginManager().callEvent(new RunningTimerRunEvent(this, this.game));
+            plugin.getServer().getScheduler().runTask(plugin, sync -> {
+                plugin.getServer().getPluginManager().callEvent(new RunningTimerRunEvent(this, this.game));
+            });
         } else {
             this.stop();
         }
@@ -34,8 +36,9 @@ public class RunningTimer extends Timer {
     @Override
     public void end() {
         this.game.getGameStateManager().setGameState(GameState.END);
-        game.getShutdownTimer().start();
-        plugin.getServer().getPluginManager().callEvent(new RunningTimerEndEvent(this, this.game));
+        game.getShutdownTimer().start();plugin.getServer().getScheduler().runTask(plugin, sync -> {
+            plugin.getServer().getPluginManager().callEvent(new RunningTimerEndEvent(this, this.game));
+        });
     }
 
 }

@@ -2,6 +2,7 @@ package dev.teraprath.gamelib.listener;
 
 import dev.teraprath.gamelib.game.Game;
 import dev.teraprath.gamelib.game.GameState;
+import dev.teraprath.gamelib.utils.PlayerUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,6 +29,7 @@ public class GameJoinQuitListener implements Listener {
         e.setJoinMessage(null);
         if (game.getGameStateManager().getGameState().equals(GameState.WAITING)) {
             game.join(player);
+            PlayerUtils.reset(player);
         }
     }
 
