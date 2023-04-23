@@ -1,98 +1,41 @@
 package dev.teraprath.gamelib.team;
 
-import dev.teraprath.gamelib.Game;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.UUID;
+import java.util.Set;
 
 public class TeamManager {
 
-    private final JavaPlugin plugin;
-    private final Game game;
-    private final Map<UUID, Team> teams;
-    private boolean friendlyFire;
+    private final Map<String, Team> teamMap;
 
-    public TeamManager(@Nonnull JavaPlugin plugin, @Nonnull Game game) {
-        this.plugin = plugin;
-        this.game = game;
-        this.teams = new HashMap<>();
-        this.friendlyFire = true;
+    public TeamManager() {
+        this.teamMap = new HashMap<>();
     }
 
-    public ArrayList<Team> getTeams() {
-        ArrayList<Team> list = new ArrayList<>();
-        this.teams.forEach((uuid, team) -> {
-            list.add(team);
+    public Set<Team> getTeams() {
+        Set<Team> set = new HashSet<>();
+        teamMap.forEach((s, team) -> {
+            set.add(team);
         });
-        return list;
+        return set;
     }
 
     public Team getTeam(@Nonnull String name) {
-        for (Team team : this.teams.values()) {
-            if (team.getName().equals(name)) {
-                return team;
-            }
-        }
-        return null;
+        return this.teamMap.get(name);
     }
 
-    public Team getTeam(@Nonnull UUID uuid) {
-        return this.teams.get(uuid);
+    public void addTeam(@Nonnull Team team) {
+        this.teamMap.put(team.getName(), team);
     }
 
-    public Team createTeam(@Nonnull String name, @Nonnegative int maxPlayers) {
-        final Team team = new Team(plugin, game, name, maxPlayers);
-        this.teams.put(team.getUniqueId(), team);
-        game.info("New Team created: " + team.getName() + " -> " + team.getUniqueId());
-        return team;
+    public void removeTeam(@Nonnull Team team) {
+        this.teamMap.remove(team.getName());
     }
 
-    public void deleteTeam(@Nonnull String name) {
-        deleteTeam(getTeam(name));
-    }
-
-    public void deleteTeam(@Nonnull UUID uuid) {
-        deleteTeam(getTeam(uuid));
-    }
-
-    public void deleteTeam(@Nonnull Team team) {
-        this.teams.remove(team.getUniqueId());
-        game.info("Team removed: " + team.getName() + " -> " + team.getUniqueId());
-    }
-
-    public Team parseTeam(@Nonnull String name) {
-        final Player player = plugin.getServer().getPlayer(name);
-        if (player == null) { return null; }
-        return parseTeam(player);
-    }
-
-    public Team parseTeam(@Nonnull UUID uuid) {
-        final Player player = plugin.getServer().getPlayer(uuid);
-        if (player == null) { return null; }
-        return parseTeam(player);
-    }
-
-    public Team parseTeam(@Nonnull final Player player) {
-        for (Team team : this.teams.values()) {
-            if (team.getMember().contains(player)) {
-                return team;
-            }
-        }
-        return null;
-    }
-
-    public void setFriendlyFire(boolean enabled) {
-        this.friendlyFire = enabled;
-    }
-
-    public boolean isFriendlyFire() {
-        return this.friendlyFire;
+    public void removeTeam(@Nonnull String name) {
+        this.teamMap.remove(name);
     }
 
 }

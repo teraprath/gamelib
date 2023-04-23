@@ -1,6 +1,6 @@
 package dev.teraprath.gamelib.listener;
 
-import dev.teraprath.gamelib.Game;
+import dev.teraprath.gamelib.game.Game;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerListPingEvent;
@@ -15,7 +15,7 @@ public class GameServerListener implements Listener {
 
     @EventHandler
     public void onServerListPing(ServerListPingEvent e) {
-        e.setMotd(game.getMotd(game.getGameState()));
+        e.setMotd(game.getGameSettings().getMOTD(game.getGameStateManager().getGameState()));
     }
 
 }

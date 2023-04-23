@@ -1,7 +1,7 @@
 package dev.teraprath.gamelib.listener;
 
-import dev.teraprath.gamelib.Game;
-import dev.teraprath.gamelib.state.GameState;
+import dev.teraprath.gamelib.game.Game;
+import dev.teraprath.gamelib.game.GameState;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -11,7 +11,9 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nonnull;
@@ -62,7 +64,7 @@ public class GameProtectListener implements Listener {
     }
 
     private void protectEvent(@Nonnull Cancellable event, boolean bypass, Player player) {
-        if (game.getGameState() != GameState.GAME) {
+        if (game.getGameStateManager().getGameState() != GameState.RUNNING) {
             if (bypass && player.getGameMode() != GameMode.CREATIVE) {
                 event.setCancelled(true);
             }

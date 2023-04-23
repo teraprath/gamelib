@@ -1,6 +1,6 @@
 package dev.teraprath.gamelib.utils;
 
-import dev.teraprath.gamelib.Game;
+import dev.teraprath.gamelib.game.Game;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
@@ -78,7 +78,7 @@ public class ServerUtils {
                 properties.store(os, "Minecraft server properties");
             }
         } catch (IOException e) {
-            game.error("An error occurred while updating the server properties");
+            plugin.getLogger().warning("An error occurred while updating the server properties");
         }
     }
 

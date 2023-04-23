@@ -1,8 +1,6 @@
 package dev.teraprath.gamelib.event;
 
 import dev.teraprath.gamelib.game.Game;
-import dev.teraprath.gamelib.game.GameState;
-import dev.teraprath.gamelib.game.GameStateManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -10,12 +8,14 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
-public class GameStateChangeEvent extends Event {
+public class GameQuitEvent extends Event {
 
     private static final HandlerList HANDLER_LIST = new HandlerList();
+    private final Player player;
     private final Game game;
 
-    public GameStateChangeEvent(@Nonnull final Game game) {
+    public GameQuitEvent(@Nonnull Player player, @Nonnull final Game game) {
+        this.player = player;
         this.game = game;
     }
 
@@ -26,9 +26,7 @@ public class GameStateChangeEvent extends Event {
 
     public static HandlerList getHandlerList() { return HANDLER_LIST; }
 
-    public GameState getGameState() {
-        return this.game.getGameStateManager().getGameState();
-    }
+    public Player getPlayer() { return this.player; }
 
     public Game getGame() { return this.game; }
 

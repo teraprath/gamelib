@@ -1,21 +1,21 @@
 package dev.teraprath.gamelib.event;
 
 import dev.teraprath.gamelib.game.Game;
-import dev.teraprath.gamelib.game.GameState;
-import dev.teraprath.gamelib.game.GameStateManager;
-import org.bukkit.entity.Player;
+import dev.teraprath.gamelib.timer.WaitingTimer;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
-public class GameStateChangeEvent extends Event {
+public class WaitingTimerRunEvent extends Event {
 
     private static final HandlerList HANDLER_LIST = new HandlerList();
+    private final WaitingTimer timer;
     private final Game game;
 
-    public GameStateChangeEvent(@Nonnull final Game game) {
+    public WaitingTimerRunEvent(@Nonnull WaitingTimer timer, @Nonnull final Game game) {
+        this.timer = timer;
         this.game = game;
     }
 
@@ -26,8 +26,8 @@ public class GameStateChangeEvent extends Event {
 
     public static HandlerList getHandlerList() { return HANDLER_LIST; }
 
-    public GameState getGameState() {
-        return this.game.getGameStateManager().getGameState();
+    public WaitingTimer getTimer() {
+        return this.timer;
     }
 
     public Game getGame() { return this.game; }
