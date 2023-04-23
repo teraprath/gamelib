@@ -38,4 +38,4 @@ dependencies {
 
 ## Setup
 
-Visit [wiki](https://github.com/teraprath/gamelib/wiki/) page to see usage guide.
+Visit [wiki](https://github.com/teraprath/gamelib/wiki/) page to see usage guide. (Outdated)
