@@ -6,7 +6,7 @@
 
     <groupId>dev.teraprath</groupId>
     <artifactId>gamelib</artifactId>
-    <version>2.2.6-SNAPSHOT</version>
+    <version>2.2.7-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
