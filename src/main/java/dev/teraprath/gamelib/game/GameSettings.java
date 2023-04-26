@@ -2,6 +2,7 @@ package dev.teraprath.gamelib.game;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import java.util.HashMap;
 import java.util.Map;
 
 public class GameSettings {
@@ -19,6 +20,7 @@ public class GameSettings {
         this.runningTime = runningTime;
         this.waitingTime = waitingTime;
         this.shutdownTime = shutdownTime;
+        this.motd = new HashMap<>();
         for (GameState gameState : GameState.values()) {
             this.motd.put(gameState, gameState.name());
         }
